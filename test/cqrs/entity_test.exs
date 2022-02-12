@@ -22,6 +22,45 @@ defmodule Cqrs.EntityTest do
     assert %Entity1{id: ^id} = Entity1.new(id: id)
   end
 
+  describe "equality" do
+    test "entities have identity function" do
+      assert [1] == Entity1.__info__(:functions) |> Keyword.get_values(:identity)
+    end
+
+    test "entities have equals? function" do
+      assert [2] == Entity1.__info__(:functions) |> Keyword.get_values(:equals?)
+    end
+
+    test "entities can only check equality of same entity types" do
+      one = Entity1.new(id: UUID.uuid4())
+      two = Entity2.new(ident: UUID.uuid4())
+
+      error =
+        "Cqrs.EntityTestMessages.Protocol.Entity1.equals? requires two Cqrs.EntityTestMessages.Protocol.Entity1 structs"
+
+      assert_raise Cqrs.Entity.Error, error, fn ->
+        Entity1.equals?(one, two)
+      end
+    end
+
+    test "identity works" do
+      id = UUID.uuid4()
+      assert id == Entity1.new(id: id) |> Entity1.identity()
+    end
+
+    test "equality check works" do
+      one = Entity1.new(id: UUID.uuid4())
+      two = Entity1.new(id: UUID.uuid4())
+
+      assert false == Entity1.equals?(one, two)
+
+      id = UUID.uuid4()
+      left = Entity1.new(id: id)
+      right = Entity1.new(id: id)
+      assert true == Entity1.equals?(left, right)
+    end
+  end
+
   describe "custom primary key" do
     test "unable to set to false" do
       code = """
