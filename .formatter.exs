@@ -6,7 +6,10 @@ locals_without_parens = [
   defvalue: 1,
   defvalue: 2,
   defentity: 1,
-  defentity: 2
+  defentity: 2,
+  derive_event: 1,
+  derive_event: 2,
+  derive_event: 3
 ]
 
 [
