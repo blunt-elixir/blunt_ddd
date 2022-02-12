@@ -1,17 +1,17 @@
 defmodule Cqrs.DomainEventTest do
   use ExUnit.Case, async: true
 
-  alias Cqrs.DomainEventTest.Protocol.{DefaultEvent, EventWithSetVersion, EventWithSetVersionAsDecimal}
+  alias Support.DomainEventTest.{DefaultEvent, EventWithSetVersion, EventWithDecimalVersion}
 
   test "is version 1 by default" do
-    assert %DefaultEvent{version: 1} = DefaultEvent.create(%{})
+    assert %DefaultEvent{version: 1} = DefaultEvent.new(%{})
   end
 
   test "version is settable" do
-    assert %EventWithSetVersion{version: 2} = EventWithSetVersion.create(%{})
+    assert %EventWithSetVersion{version: 2} = EventWithSetVersion.new(%{})
   end
 
   test "version is decimal" do
-    assert %EventWithSetVersionAsDecimal{version: 2.3} = EventWithSetVersionAsDecimal.create(%{})
+    assert %EventWithDecimalVersion{version: 2.3} = EventWithDecimalVersion.new(%{})
   end
 end

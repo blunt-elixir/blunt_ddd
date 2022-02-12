@@ -19,7 +19,7 @@ defmodule Cqrs.EntityTest do
     assert {:error, %{id: ["can't be blank"]}} = Entity1.new(%{})
     assert {:error, %{id: ["is invalid"]}} = Entity1.new(%{id: "2342"})
     id = UUID.uuid4()
-    assert {:ok, %Entity1{id: ^id}, _discared_data} = Entity1.new(id: id)
+    assert %Entity1{id: ^id} = Entity1.new(id: id)
   end
 
   describe "custom primary key" do

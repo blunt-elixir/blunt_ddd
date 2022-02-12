@@ -1,25 +1,23 @@
 defmodule Cqrs.DomainEvent do
+  alias Cqrs.Ddd.Constructor
+
   defmacro __using__(opts) do
     quote do
       use Cqrs.Message,
           [require_all_fields?: false]
           |> Keyword.merge(unquote(opts))
+          |> Constructor.put_option()
           |> Keyword.put(:versioned?, true)
-          |> Keyword.put(:message_type, :event)
+          |> Keyword.put(:message_type, :domain_event)
 
-      @type values :: Cqrs.Message.Input.t()
-      @type overrides :: Cqrs.Message.Input.t()
-
-      @spec create(values(), overrides()) :: struct() | {:error, any()}
-      def create(values, overrides \\ []),
-        do: Cqrs.DomainEvent.create(__MODULE__, values, overrides)
+      @before_compile Cqrs.DomainEvent
     end
   end
 
-  @doc false
-  def create(module, values, overrides \\ []) do
-    with {:ok, event, _discarded_data} <- module.new(values, overrides) do
-      event
+  defmacro __before_compile__(_env) do
+    quote do
+      require Constructor
+      Constructor.generate(return_type: :struct)
     end
   end
 end

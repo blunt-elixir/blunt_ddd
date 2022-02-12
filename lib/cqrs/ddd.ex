@@ -5,6 +5,13 @@ defmodule Cqrs.Ddd do
     end
   end
 
+  defmacro defaggregate(do: body) do
+    quote do
+      use Cqrs.AggregateRoot
+      unquote(body)
+    end
+  end
+
   defmacro defcontext(do: body) do
     quote do
       use Cqrs.BoundedContext

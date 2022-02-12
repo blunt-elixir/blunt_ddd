@@ -9,7 +9,7 @@ defmodule CqrsToolsDdd.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: [
-        description: "DDD semantics for `cqrs_tools`",
+        description: "DDD semantics for cqrs_tools",
         licenses: ["MIT"],
         links: %{"GitHub" => "https://github.com/elixir-cqrs/cqrs_tools_ddd"}
       ],
