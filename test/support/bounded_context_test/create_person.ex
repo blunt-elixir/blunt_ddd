@@ -1,14 +1,13 @@
 defmodule Support.BoundedContextTest.CreatePerson do
   use Cqrs.Command
 
-  field(:name, :string)
+  field :name, :string
 
-  field(:id, :binary_id,
+  field :id, :binary_id,
     desc: "Id is set internally. Setting it will have no effect",
     required: false
-  )
 
-  option(:send_notification, :boolean, default: false)
+  option :send_notification, :boolean, default: false
 
   @impl true
   def after_validate(command) do

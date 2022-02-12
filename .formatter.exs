@@ -1,5 +1,9 @@
 # Used by "mix format"
 locals_without_parens = [
+  command: 1,
+  command: 2,
+  query: 1,
+  query: 2,
   defcontext: 1,
   defevent: 1,
   defevent: 2,
@@ -15,7 +19,7 @@ locals_without_parens = [
 [
   locals_without_parens: locals_without_parens,
   line_length: 120,
-  import_deps: [:cqrs_tools],
+  import_deps: [:cqrs_tools, :ecto],
   export: [
     locals_without_parens: locals_without_parens
   ],

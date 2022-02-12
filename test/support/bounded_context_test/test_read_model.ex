@@ -4,7 +4,7 @@ defmodule Support.BoundedContextTest.ReadModel do
 
     @primary_key {:id, :binary_id, autogenerate: false}
     schema "people" do
-      field(:name, :string)
+      field :name, :string
     end
 
     def changeset(person \\ %__MODULE__{}, attrs) do
