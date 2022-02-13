@@ -11,14 +11,14 @@ defmodule Cqrs.Entity.Identity do
     |> Keyword.pop!(:identity)
   end
 
-  def ensure_field({name, type}), do: {name, type, []}
-  def ensure_field({name, type, config}), do: {name, type, config}
+  defp ensure_field({name, type}), do: {name, type, []}
+  defp ensure_field({name, type, config}), do: {name, type, config}
 
-  def ensure_field(value) when value in [false, nil] do
+  defp ensure_field(value) when value in [false, nil] do
     raise Error, message: "Entities require a primary key"
   end
 
-  def ensure_field(_other) do
+  defp ensure_field(_other) do
     raise Error, message: "identity must be either {name, type} or {name, type, options}"
   end
 
