@@ -13,8 +13,7 @@ defmodule Cqrs.BoundedContextTest do
   end
 
   test "proxy functions can set option values" do
-    assert {:ok, context} =
-             UsersContext.create_person_with_custom_opts(%{name: "chris"}, return: :context)
+    assert {:ok, context} = UsersContext.create_person_with_custom_opts(%{name: "chris"}, return: :context)
 
     assert true == DispatchContext.get_option(context, :send_notification)
   end
@@ -48,5 +47,11 @@ defmodule Cqrs.BoundedContextTest do
 
     assert %Person{id: ^person_id} = Query.results(context)
     assert %Ecto.Query{from: %{source: {"people", Person}}} = Query.query(context)
+  end
+
+  test "field_values option will supply query fields" do
+    id = "07faaf1d-5890-4391-a6db-50e86c240965"
+    assert {:ok, context} = UsersContext.get_known_user([], return: :context)
+    assert %{id: ^id} = Query.filters(context)
   end
 end

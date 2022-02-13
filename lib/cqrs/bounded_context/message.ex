@@ -1,6 +1,7 @@
 defmodule Cqrs.BoundedContext.Message do
   @moduledoc false
 
+  alias Cqrs.Message.Input
   alias Cqrs.BoundedContext.{Error, Message}
 
   def validate_proxy!({:command, module, _opts}) do
@@ -41,7 +42,7 @@ defmodule Cqrs.BoundedContext.Message do
     query_function_name = String.to_atom("#{function_name}_query")
 
     quote do
-      def unquote(function_name)(values, opts \\ []) do
+      def unquote(function_name)(values \\ [], opts \\ []) do
         opts = Keyword.merge(unquote(proxy_opts), opts)
         Message.dispatch(unquote(module), values, opts)
       end
@@ -81,12 +82,17 @@ defmodule Cqrs.BoundedContext.Message do
   end
 
   def dispatch(module, values, opts) do
-    opts =
+    {field_values, opts} =
       opts
       |> Keyword.put(:dispatched_from, :bounded_context)
       |> Keyword.put(:user_supplied_fields, user_supplied_fields(values))
+      |> Keyword.pop(:field_values, [])
+
+    field_values = Enum.into(field_values, %{})
+    values = Input.normalize(values, module)
 
     values
+    |> Map.merge(field_values)
     |> module.new()
     |> module.dispatch(opts)
   end
