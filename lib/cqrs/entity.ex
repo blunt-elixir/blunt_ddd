@@ -1,5 +1,4 @@
 defmodule Cqrs.Entity do
-  alias Cqrs.Behaviour
   alias Cqrs.Ddd.Constructor
   alias Cqrs.Entity.Identity
 
@@ -28,28 +27,11 @@ defmodule Cqrs.Entity do
 
   defmacro __before_compile__(_env) do
     quote do
-      def identity(%__MODULE__{} = entity),
-        do: Cqrs.Entity.identity(__MODULE__, entity)
-
-      def equals?(left, right),
-        do: Cqrs.Entity.equals?(__MODULE__, left, right)
-
+      require Identity
       require Constructor
+
+      Identity.generate()
       Constructor.generate(return_type: :struct)
     end
-  end
-
-  def identity(entity_module, entity) do
-    Behaviour.validate!(entity_module, Cqrs.Entity)
-    {identity, _type, _config} = entity_module.__primary_key__()
-    Map.fetch!(entity, identity)
-  end
-
-  def equals?(entity_module, %{__struct__: entity_module} = left, %{__struct__: entity_module} = right) do
-    identity(entity_module, left) == identity(entity_module, right)
-  end
-
-  def equals?(entity_module, _left, _right) do
-    raise Error, message: "#{inspect(entity_module)}.equals? requires two #{inspect(entity_module)} structs"
   end
 end
