@@ -18,6 +18,23 @@ defmodule Cqrs.Command.EventDerivationTest do
     %{} = %NamespacedEventWithExtrasAndDrops{}
   end
 
+  describe "proxy functions" do
+    test "are created on the command" do
+      funcs = CommandWithEventDerivations.__info__(:functions)
+      assert [1, 2] = Keyword.get_values(funcs, :event_with_drops)
+      assert [1, 2] = Keyword.get_values(funcs, :event_with_extras)
+      assert [1, 2] = Keyword.get_values(funcs, :event_with_extras_and_drops)
+      assert [1, 2] = Keyword.get_values(funcs, :namespaced_event_with_extras_and_drops)
+    end
+
+    test "invocation" do
+      assert %EventWithExtras{dog: "jake", name: "chris"} =
+               %{name: "chris"}
+               |> CommandWithEventDerivations.new()
+               |> CommandWithEventDerivations.event_with_extras(dog: "jake")
+    end
+  end
+
   test "are created and returned from pipeline" do
     {:ok, events} =
       %{name: "chris"}

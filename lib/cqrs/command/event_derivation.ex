@@ -32,6 +32,11 @@ defmodule Cqrs.Command.EventDerivation do
   defmacro __before_compile__(_env) do
     quote do
       def __events__, do: @events
+
+      proxies = Enum.map(@events, &Events.generate_proxy/1)
+
+      Module.eval_quoted(__MODULE__, proxies)
+
       Module.delete_attribute(__MODULE__, :events)
     end
   end

@@ -33,6 +33,8 @@ defmodule CqrsToolsDdd.MixProject do
     [
       {:cqrs_tools, path: "../cqrs_tools"},
       {:etso, "~> 0.1.6", only: [:test]},
+      {:faker, "~> 0.17.0", optional: true},
+      {:ex_machina, "~> 2.7", optional: true},
       {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
       {:elixir_uuid, "~> 1.6", override: true, hex: :uuid_utils, only: :test}
     ]
