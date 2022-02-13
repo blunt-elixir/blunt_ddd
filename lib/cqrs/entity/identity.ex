@@ -34,8 +34,8 @@ defmodule Cqrs.Entity.Identity do
 
   def identity(entity_module, entity) do
     Behaviour.validate!(entity_module, Cqrs.Entity)
-    {identity, _type, _config} = entity_module.__primary_key__()
-    Map.fetch!(entity, identity)
+    {field_name, _type, _config} = entity_module.__primary_key__()
+    Map.fetch!(entity, field_name)
   end
 
   def equals?(entity_module, %{__struct__: entity_module} = left, %{__struct__: entity_module} = right) do
