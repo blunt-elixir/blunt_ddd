@@ -4,7 +4,7 @@ defmodule Support.Testing.PersonAggregate do
   alias Support.Testing.{CreatePerson, PersonCreated}
   alias Support.Testing.{AddReservation, ReservationAdded, ReservationEntity}
 
-  defaggregate do
+  aggregate_state do
     field :id, :binary_id
     field :reservations, {:array, ReservationEntity}, default: []
   end

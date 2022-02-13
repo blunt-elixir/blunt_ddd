@@ -25,7 +25,6 @@ defmodule Cqrs.Command.EventDerivationTest do
       assert [1, 2] = Keyword.get_values(funcs, :event_with_extras)
       assert [1, 2] = Keyword.get_values(funcs, :event_with_extras_and_drops)
       assert [1, 2] = Keyword.get_values(funcs, :namespaced_event_with_extras_and_drops)
-      CommandWithEventDerivations.event_with_drops()
     end
 
     test "invocation" do

@@ -5,7 +5,7 @@ defmodule Cqrs.Ddd do
     end
   end
 
-  defmacro defaggregate(do: body) do
+  defmacro aggregate_state(do: body) do
     quote do
       use Cqrs.AggregateRoot
       unquote(body)

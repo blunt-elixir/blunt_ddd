@@ -3,7 +3,7 @@ defmodule Support.AggregateRootTest.PersonAggregateRoot do
   alias Support.AggregateRootTest.ReservationEntity
   alias Support.AggregateRootTest.Protocol.{PersonCreated, ReservationAdded}
 
-  defaggregate do
+  aggregate_state do
     field :id, :binary_id
     field :reservations, {:array, ReservationEntity}, default: []
   end
