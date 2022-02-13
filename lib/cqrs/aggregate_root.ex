@@ -46,7 +46,10 @@ defmodule Cqrs.AggregateRoot do
     quote do
       require Schema
       Schema.generate()
-      access = Enum.map(@schema_fields, &State.generate_access/1)
+
+      require State
+      State.generate_update()
+      access = Enum.map(@schema_fields, &State.generate_field_access/1)
       Module.eval_quoted(__MODULE__, access)
     end
   end

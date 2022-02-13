@@ -1,7 +1,7 @@
 defmodule Cqrs.AggregateRootTest do
   use ExUnit.Case, async: true
 
-  alias Support.AggregateRootTest.PersonAggregateRoot
+  alias Support.AggregateRootTest.{PersonAggregateRoot, ReservationEntity}
   alias Support.AggregateRootTest.Protocol.{PersonCreated, ReservationAdded}
 
   test "initial aggregate state" do
@@ -31,5 +31,31 @@ defmodule Cqrs.AggregateRootTest do
 
     assert %{id: ^person_id, reservations: [%{id: ^reservation_id}]} =
              Enum.reduce(events, state, &PersonAggregateRoot.apply(&2, &1))
+  end
+
+  describe "state functions" do
+    test "put function" do
+      state = %PersonAggregateRoot{}
+      id = UUID.uuid4()
+      assert %{id: ^id} = PersonAggregateRoot.put_id(state, id)
+    end
+
+    test "get function" do
+      id = UUID.uuid4()
+      state = %PersonAggregateRoot{id: id}
+      assert id == PersonAggregateRoot.get_id(state)
+    end
+
+    test "update function" do
+      state = %PersonAggregateRoot{id: "e8caa2e5-19fe-4da2-99e6-45b5f3429b5d"}
+
+      id = UUID.uuid4()
+      reservation_id = UUID.uuid4()
+      entity = ReservationEntity.new(id: reservation_id)
+
+      values = %{id: id, reservations: [entity]}
+
+      assert %{id: ^id, reservations: [%{id: ^reservation_id}]} = PersonAggregateRoot.update(state, values)
+    end
   end
 end
