@@ -9,7 +9,7 @@ defmodule Cqrs.Command.Events do
     end
   end
 
-  def generate_proxy({name, opts, _location}) do
+  def generate_proxy({name, opts, {file, line}}) do
     opts = Keyword.delete(opts, :do)
     proxy_function_name = String.to_atom(Macro.underscore(name))
 
@@ -18,7 +18,7 @@ defmodule Cqrs.Command.Events do
         Events.fq_event_name(__MODULE__, unquote(name), unquote(opts))
       end
 
-    quote do
+    quote file: file, line: line do
       def unquote(proxy_function_name)(command, values \\ [])
 
       def unquote(proxy_function_name)({:error, _} = errors, _values),
