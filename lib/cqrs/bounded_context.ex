@@ -33,11 +33,7 @@ defmodule Cqrs.BoundedContext do
       def __proxies__, do: @proxies
 
       proxies = Enum.map(@proxies, &Message.generate_proxy/1)
-
       Module.eval_quoted(__MODULE__, proxies)
-
-      Module.delete_attribute(__MODULE__, :queries)
-      Module.delete_attribute(__MODULE__, :commands)
     end
   end
 

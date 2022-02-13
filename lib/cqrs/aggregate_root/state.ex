@@ -9,17 +9,17 @@ defmodule Cqrs.AggregateRoot.State do
     putter = String.to_atom("put_#{name}")
 
     quote do
-      def unquote(getter)(state) do
+      def unquote(getter)(%__MODULE__{} = state) do
         Map.fetch!(state, unquote(name))
       end
 
-      def unquote(putter)(state, value) do
-        State.set(__MODULE__, state, unquote(name), value)
+      def unquote(putter)(%__MODULE__{} = state, value) do
+        State.put(__MODULE__, state, unquote(name), value)
       end
     end
   end
 
-  def set(state_module, state, key, value) do
+  def put(state_module, state, key, value) do
     types =
       :fields
       |> state_module.__schema__()
