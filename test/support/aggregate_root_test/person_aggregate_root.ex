@@ -9,10 +9,10 @@ defmodule Support.AggregateRootTest.PersonAggregateRoot do
   end
 
   def apply(state, %PersonCreated{id: id}),
-    do: set(state, :id, id)
+    do: put_id(state, id)
 
   def apply(%{reservations: reservations} = state, %ReservationAdded{reservation_id: id}) do
     reservation = ReservationEntity.new(id: id)
-    set(state, :reservations, [reservation | reservations])
+    put_reservations(state, [reservation | reservations])
   end
 end

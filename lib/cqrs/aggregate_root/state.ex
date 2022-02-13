@@ -2,7 +2,22 @@ defmodule Cqrs.AggregateRoot.State do
   @moduledoc false
 
   alias Cqrs.Message.Changeset
-  alias Cqrs.AggregateRoot.Error
+  alias Cqrs.AggregateRoot.{Error, State}
+
+  def generate_access({name, _type, _config}) do
+    getter = String.to_atom("get_#{name}")
+    putter = String.to_atom("put_#{name}")
+
+    quote do
+      def unquote(getter)(state) do
+        Map.fetch!(state, unquote(name))
+      end
+
+      def unquote(putter)(state, value) do
+        State.set(__MODULE__, state, unquote(name), value)
+      end
+    end
+  end
 
   def set(state_module, state, key, value) do
     types =

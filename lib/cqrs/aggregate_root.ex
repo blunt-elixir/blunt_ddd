@@ -35,9 +35,6 @@ defmodule Cqrs.AggregateRoot do
       @impl true
       def execute(_state, _command), do: nil
       defoverridable execute: 2
-
-      def set(state, key, value),
-        do: State.set(__MODULE__, state, key, value)
     end
   end
 
@@ -49,6 +46,8 @@ defmodule Cqrs.AggregateRoot do
     quote do
       require Schema
       Schema.generate()
+      access = Enum.map(@schema_fields, &State.generate_access/1)
+      Module.eval_quoted(__MODULE__, access)
     end
   end
 end
