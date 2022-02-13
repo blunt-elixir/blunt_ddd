@@ -51,4 +51,19 @@ defmodule Cqrs.Command.EventDerivationTest do
              namespaced_event_with_extras_and_drops: %NamespacedEventWithExtrasAndDrops{name: "chris", date: ^today}
            } = events
   end
+
+  defmodule ComandWithFQEvent do
+    use Cqrs.Command
+    use Cqrs.Command.EventDerivation
+
+    derive_event My.Namespace.ThingHappened
+  end
+
+  test "event name can be fully qualified" do
+    %{} = struct(My.Namespace.ThingHappened)
+  end
+
+  test "command has proxy function to event" do
+    assert [1, 2] = ComandWithFQEvent.__info__(:functions) |> Keyword.get_values(:thing_happened)
+  end
 end

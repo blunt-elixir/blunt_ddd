@@ -11,6 +11,12 @@ defmodule Cqrs.Command.Events do
 
   def generate_proxy({name, opts, {file, line}}) do
     opts = Keyword.delete(opts, :do)
+
+    name =
+      name
+      |> Module.split()
+      |> List.last()
+
     proxy_function_name = String.to_atom(Macro.underscore(name))
 
     event_module =
