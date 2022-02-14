@@ -19,7 +19,7 @@ defmodule Cqrs.BoundedContextTest do
   end
 
   test "get_person proxy" do
-    assert [1, 2] == UsersContext.__info__(:functions) |> Keyword.get_values(:get_person)
+    assert [0, 1, 2] == UsersContext.__info__(:functions) |> Keyword.get_values(:get_person)
   end
 
   test "get_person_query proxy" do

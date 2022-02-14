@@ -29,10 +29,15 @@ defmodule Cqrs.BoundedContext.Message do
   def generate_proxy({:command, module, proxy_opts}) do
     {function_name, proxy_opts} = function_name(module, proxy_opts)
 
+    body =
+      quote bind_quoted: [module: module, proxy_opts: proxy_opts] do
+        opts = Keyword.merge(proxy_opts, opts)
+        Message.dispatch(module, values, opts)
+      end
+
     quote do
       def unquote(function_name)(values, opts \\ []) do
-        opts = Keyword.merge(unquote(proxy_opts), opts)
-        Message.dispatch(unquote(module), values, opts)
+        unquote(body)
       end
     end
   end
