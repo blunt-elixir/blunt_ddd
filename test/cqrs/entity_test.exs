@@ -1,5 +1,7 @@
 defmodule Cqrs.EntityTest do
   use ExUnit.Case, async: true
+
+  alias Cqrs.Message.Metadata
   alias Cqrs.EntityTestMessages.Protocol.{Entity1, Entity2}
 
   test "entity has id field by default" do
@@ -101,10 +103,9 @@ defmodule Cqrs.EntityTest do
     end
 
     test "can customize identity field" do
-      fields = Entity2.__schema__(:fields)
-      refute Enum.member?(fields, :id)
-      assert Enum.member?(fields, :ident)
-      assert :binary_id = Entity2.__schema__(:type, :ident)
+      refute Metadata.has_field?(Entity2, :id)
+      assert Metadata.has_field?(Entity2, :ident)
+      assert Ecto.UUID = Entity2.__schema__(:type, :ident)
     end
   end
 end

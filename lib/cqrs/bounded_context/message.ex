@@ -1,7 +1,7 @@
 defmodule Cqrs.BoundedContext.Message do
   @moduledoc false
 
-  alias Cqrs.Message.Input
+  alias Cqrs.Message.{Input, Metadata}
   alias Cqrs.BoundedContext.{Error, Message}
 
   def validate_proxy!({:command, module, _opts}) do
@@ -17,7 +17,7 @@ defmodule Cqrs.BoundedContext.Message do
   defp validate!(module, type, error) do
     case Code.ensure_compiled(module) do
       {:module, module} ->
-        unless function_exported?(module, :__message_type__, 0) && module.__message_type__() == type do
+        unless Metadata.is_message_type?(module, type) do
           raise Error, message: error
         end
 

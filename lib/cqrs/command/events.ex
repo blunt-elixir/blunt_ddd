@@ -2,6 +2,7 @@ defmodule Cqrs.Command.Events do
   @moduledoc false
 
   alias Cqrs.Command.Events
+  alias Cqrs.Message.Metadata
 
   def record(name, opts) do
     quote do
@@ -48,7 +49,8 @@ defmodule Cqrs.Command.Events do
     to_drop = Keyword.get(opts, :drop, []) |> List.wrap()
 
     schema_fields =
-      command.__schema_fields__()
+      command
+      |> Metadata.fields()
       |> Enum.reject(fn {name, _type, _opts} -> Enum.member?(to_drop, name) end)
       |> Enum.map(fn
         {:created_at, _, _} -> nil

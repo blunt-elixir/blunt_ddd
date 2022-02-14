@@ -3,6 +3,7 @@ defmodule Cqrs.Entity.Identity do
 
   @default {:id, Ecto.UUID, autogenerate: false}
 
+  alias Cqrs.Message.Metadata
   alias Cqrs.{Behaviour, Entity.Error, Entity.Identity}
 
   def pop(opts) do
@@ -34,7 +35,7 @@ defmodule Cqrs.Entity.Identity do
 
   def identity(entity_module, entity) do
     Behaviour.validate!(entity_module, Cqrs.Entity)
-    {field_name, _type, _config} = entity_module.__primary_key__()
+    {field_name, _type, _config} = Metadata.primary_key(entity_module)
     Map.fetch!(entity, field_name)
   end
 
