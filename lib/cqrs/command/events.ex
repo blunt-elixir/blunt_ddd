@@ -21,25 +21,25 @@ defmodule Cqrs.Command.Events do
     proxy_function_name = String.to_atom(Macro.underscore(event_name))
 
     event_module =
-      quote do
-        Events.fq_event_name(__MODULE__, unquote(name), unquote(opts))
+      quote bind_quoted: [name: name, opts: opts] do
+        Events.fq_event_name(__MODULE__, name, opts)
       end
 
     quote file: file, line: line do
-      def unquote(proxy_function_name)(command, values \\ [])
-
-      def unquote(proxy_function_name)({:error, _} = errors, _values),
-        do: errors
-
-      def unquote(proxy_function_name)({:ok, %__MODULE__{} = command, _}, values) do
-        unquote(event_module).new(command, values)
-      end
-
-      def unquote(proxy_function_name)(%__MODULE__{} = command, values) do
-        unquote(event_module).new(command, values)
+      def unquote(proxy_function_name)(command, values \\ []) do
+        Events.proxy_dispatch(__MODULE__, unquote(event_module), command, values)
       end
     end
   end
+
+  def proxy_dispatch(_command_module, _event_module, {:error, _} = errors, _values),
+    do: errors
+
+  def proxy_dispatch(command_module, event_module, {:ok, %{__struct__: command_module} = command, _}, values),
+    do: event_module.new(command, values)
+
+  def proxy_dispatch(command_module, event_module, %{__struct__: command_module} = command, values),
+    do: event_module.new(command, values)
 
   def generate_events(%{module: command} = env),
     do: Enum.each(command.__events__(), &generate_event(env, &1))
