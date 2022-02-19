@@ -1,6 +1,6 @@
 defmodule Cqrs.AggregateRoot do
   alias Cqrs.AggregateRoot.State
-  alias Cqrs.Message.{Field, Schema}
+  alias Cqrs.Message.{Schema, Schema.Fields}
 
   @type state :: struct()
   @type command :: struct()
@@ -40,7 +40,7 @@ defmodule Cqrs.AggregateRoot do
 
   @spec field(name :: atom(), type :: atom(), keyword()) :: any()
   defmacro field(name, type, opts \\ []),
-    do: Field.record(name, type, opts)
+    do: Fields.record(name, type, opts)
 
   defmacro __before_compile__(_env) do
     quote do

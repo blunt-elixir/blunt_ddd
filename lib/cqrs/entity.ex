@@ -18,7 +18,7 @@ defmodule Cqrs.Entity do
           |> Constructor.put_option()
           |> Keyword.put(:dispatch?, false)
           |> Keyword.put(:message_type, :entity)
-          |> Keyword.put(:primary_key, Macro.escape(identity))
+          |> Keyword.put(:primary_key, identity)
 
       @behaviour Cqrs.Entity
       @before_compile Cqrs.Entity
