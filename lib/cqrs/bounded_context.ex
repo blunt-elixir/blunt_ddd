@@ -1,5 +1,5 @@
 defmodule Cqrs.BoundedContext do
-  alias Cqrs.BoundedContext.Message
+  alias Cqrs.{BoundedContext, BoundedContext.Proxy}
 
   defmodule Error do
     defexception [:message]
@@ -7,9 +7,8 @@ defmodule Cqrs.BoundedContext do
 
   defmacro __using__(_opts) do
     quote do
-      Module.register_attribute(__MODULE__, :proxies, accumulate: true)
+      Module.register_attribute(__MODULE__, :proxies, accumulate: true, persist: true)
 
-      @before_compile Cqrs.BoundedContext
       @after_compile Cqrs.BoundedContext
 
       import Cqrs.BoundedContext, only: :macros
@@ -17,28 +16,33 @@ defmodule Cqrs.BoundedContext do
   end
 
   defmacro command(module, opts \\ []) do
-    quote do
-      @proxies {:command, unquote(module), unquote(opts), {__ENV__.file, __ENV__.line}}
+    quote bind_quoted: [module: module, opts: opts] do
+      @proxies {:command, module}
+      proxy = Proxy.generate({:command, module, opts})
+      Module.eval_quoted(__ENV__, proxy)
     end
   end
 
   defmacro query(module, opts \\ []) do
-    quote do
-      @proxies {:query, unquote(module), unquote(opts), {__ENV__.file, __ENV__.line}}
-    end
-  end
-
-  defmacro __before_compile__(_env) do
-    quote do
-      def __proxies__, do: @proxies
-
-      proxies = Enum.map(@proxies, &Message.generate_proxy/1)
-      Module.eval_quoted(__MODULE__, proxies)
+    quote bind_quoted: [module: module, opts: opts] do
+      @proxies {:query, module}
+      proxy = Proxy.generate({:query, module, opts})
+      Module.eval_quoted(__ENV__, proxy)
     end
   end
 
   defmacro __after_compile__(%{module: module}, _bytecode) do
-    Enum.each(module.__proxies__(), &Message.validate_proxy!/1)
+    module
+    |> BoundedContext.proxies()
+    |> Enum.each(&Proxy.validate!(&1, module))
+
     nil
+  end
+
+  def proxies(bounded_context_module) do
+    :attributes
+    |> bounded_context_module.__info__()
+    |> Keyword.get_values(:proxies)
+    |> List.flatten()
   end
 end

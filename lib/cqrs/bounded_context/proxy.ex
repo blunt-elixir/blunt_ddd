@@ -1,21 +1,21 @@
-defmodule Cqrs.BoundedContext.Message do
+defmodule Cqrs.BoundedContext.Proxy do
   @moduledoc false
 
   alias Cqrs.Message.{Input, Metadata}
-  alias Cqrs.BoundedContext.{Error, Message}
+  alias Cqrs.BoundedContext.{Error, Proxy}
 
-  def validate_proxy!({:command, module, _opts, {file, line}}) do
-    error = "#{inspect(module)} is not a valid #{inspect(Cqrs.Command)}. #{file}:#{line}"
-    validate!(module, :command, error)
+  def validate!({:command, command_module}, context_module) do
+    error = "#{inspect(command_module)} in #{inspect(context_module)} is not a valid #{inspect(Cqrs.Command)}."
+    do_validate!(command_module, :command, error)
   end
 
-  def validate_proxy!({:query, module, _opts, {file, line}}) do
-    error = "#{inspect(module)} is not a valid #{inspect(Cqrs.Query)}. #{file}:#{line}"
-    validate!(module, :query, error)
+  def validate!({:query, query_module}, context_module) do
+    error = "#{inspect(query_module)} in #{inspect(context_module)} is not a valid #{inspect(Cqrs.Query)}."
+    do_validate!(query_module, :query, error)
   end
 
-  defp validate!(module, type, error) do
-    case Code.ensure_compiled(module) do
+  defp do_validate!(message_module, type, error) do
+    case Code.ensure_compiled(message_module) do
       {:module, module} ->
         unless Metadata.is_message_type?(module, type) do
           raise Error, message: error
@@ -26,46 +26,34 @@ defmodule Cqrs.BoundedContext.Message do
     end
   end
 
-  def generate_proxy({:command, module, proxy_opts, {file, line}}) do
-    docs = get_docs(module)
+  def generate({:command, command_module, proxy_opts}) do
+    docs = get_docs(command_module)
 
-    {function_name, proxy_opts} = function_name(module, proxy_opts)
+    {function_name, proxy_opts} = function_name(command_module, proxy_opts)
 
-    body =
-      quote bind_quoted: [module: module, proxy_opts: proxy_opts] do
-        opts = Keyword.merge(proxy_opts, opts)
-        Message.dispatch(module, values, opts)
-      end
-
-    quote file: file, line: line do
+    quote do
       @doc unquote(docs)
       def unquote(function_name)(values, opts \\ []) do
-        unquote(body)
+        Proxy.dispatch(unquote(command_module), values, unquote(proxy_opts), opts)
       end
     end
   end
 
-  def generate_proxy({:query, module, proxy_opts, {file, line}}) do
-    docs = get_docs(module)
+  def generate({:query, query_module, proxy_opts}) do
+    docs = get_docs(query_module)
 
-    {function_name, proxy_opts} = function_name(module, proxy_opts)
+    {function_name, proxy_opts} = function_name(query_module, proxy_opts)
     query_function_name = String.to_atom("#{function_name}_query")
 
-    quote file: file, line: line do
+    quote do
       @doc unquote(docs)
       def unquote(function_name)(values \\ [], opts \\ []) do
-        opts = Keyword.merge(unquote(proxy_opts), opts)
-        Message.dispatch(unquote(module), values, opts)
+        Proxy.dispatch(unquote(query_module), values, unquote(proxy_opts), opts)
       end
 
       @doc "Same as `#{unquote(function_name)}` but returns the query without executing it"
       def unquote(query_function_name)(values, opts \\ []) do
-        opts =
-          unquote(proxy_opts)
-          |> Keyword.merge(opts)
-          |> Keyword.put(:return, :query)
-
-        Message.dispatch(unquote(module), values, opts)
+        Proxy.dispatch(unquote(query_module), values, unquote(proxy_opts), opts, return: :query)
       end
     end
   end
@@ -77,14 +65,14 @@ defmodule Cqrs.BoundedContext.Message do
     end
   end
 
-  defp function_name(module, opts) do
+  defp function_name(message_module, opts) do
     {as, opts} = Keyword.pop(opts, :as)
 
     name =
       case as do
         nil ->
           [name | _] =
-            module
+            message_module
             |> Module.split()
             |> Enum.reverse()
 
@@ -100,20 +88,22 @@ defmodule Cqrs.BoundedContext.Message do
     {name, opts}
   end
 
-  def dispatch(module, values, opts) do
+  def dispatch(message_module, values, proxy_opts, dispatch_opts, internal_opts \\ []) do
     {field_values, opts} =
-      opts
+      dispatch_opts
+      |> Keyword.merge(proxy_opts)
+      |> Keyword.merge(internal_opts)
       |> Keyword.put(:dispatched_from, :bounded_context)
       |> Keyword.put(:user_supplied_fields, user_supplied_fields(values))
       |> Keyword.pop(:field_values, [])
 
     field_values = Enum.into(field_values, %{})
-    values = Input.normalize(values, module)
+    values = Input.normalize(values, message_module)
 
     values
     |> Map.merge(field_values)
-    |> module.new()
-    |> module.dispatch(opts)
+    |> message_module.new()
+    |> message_module.dispatch(opts)
   end
 
   defp user_supplied_fields(list) when is_list(list),
