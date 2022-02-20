@@ -27,7 +27,7 @@ defmodule Cqrs.BoundedContext.Proxy do
   end
 
   def generate({:command, command_module, proxy_opts}) do
-    docs = get_docs(command_module)
+    docs = Metadata.docs(command_module)
 
     {function_name, proxy_opts} = function_name(command_module, proxy_opts)
 
@@ -40,7 +40,7 @@ defmodule Cqrs.BoundedContext.Proxy do
   end
 
   def generate({:query, query_module, proxy_opts}) do
-    docs = get_docs(query_module)
+    docs = Metadata.docs(query_module)
 
     {function_name, proxy_opts} = function_name(query_module, proxy_opts)
     query_function_name = String.to_atom("#{function_name}_query")
@@ -55,13 +55,6 @@ defmodule Cqrs.BoundedContext.Proxy do
       def unquote(query_function_name)(values, opts \\ []) do
         Proxy.dispatch(unquote(query_module), values, unquote(proxy_opts), opts, return: :query)
       end
-    end
-  end
-
-  defp get_docs(module) do
-    case Code.fetch_docs(module) do
-      {:docs_v1, _anno, _lang, _format, %{"en" => docs}, _meta, _inner_docs} -> docs
-      _ -> ""
     end
   end
 
