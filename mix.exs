@@ -31,8 +31,8 @@ defmodule CqrsToolsDdd.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:cqrs_tools, path: "../cqrs_tools", override: true},
-      # {:cqrs_tools, github: "elixir-cqrs/cqrs_tools"},
+      # {:cqrs_tools, path: "../cqrs_tools", override: true},
+      {:cqrs_tools, github: "elixir-cqrs/cqrs_tools"},
       {:etso, "~> 0.1.6", only: [:test]},
       {:faker, "~> 0.17.0", optional: true},
       {:ex_machina, "~> 2.7", optional: true},
