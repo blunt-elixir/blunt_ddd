@@ -4,13 +4,13 @@ defmodule Cqrs.BoundedContext.Message do
   alias Cqrs.Message.{Input, Metadata}
   alias Cqrs.BoundedContext.{Error, Message}
 
-  def validate_proxy!({:command, module, _opts}) do
-    error = "#{inspect(module)} is not a valid #{inspect(Cqrs.Command)}"
+  def validate_proxy!({:command, module, _opts, {file, line}}) do
+    error = "#{inspect(module)} is not a valid #{inspect(Cqrs.Command)}. #{file}:#{line}"
     validate!(module, :command, error)
   end
 
-  def validate_proxy!({:query, module, _opts}) do
-    error = "#{inspect(module)} is not a valid #{inspect(Cqrs.Query)}"
+  def validate_proxy!({:query, module, _opts, {file, line}}) do
+    error = "#{inspect(module)} is not a valid #{inspect(Cqrs.Query)}. #{file}:#{line}"
     validate!(module, :query, error)
   end
 
@@ -26,7 +26,9 @@ defmodule Cqrs.BoundedContext.Message do
     end
   end
 
-  def generate_proxy({:command, module, proxy_opts}) do
+  def generate_proxy({:command, module, proxy_opts, {file, line}}) do
+    docs = get_docs(module)
+
     {function_name, proxy_opts} = function_name(module, proxy_opts)
 
     body =
@@ -35,31 +37,43 @@ defmodule Cqrs.BoundedContext.Message do
         Message.dispatch(module, values, opts)
       end
 
-    quote do
+    quote file: file, line: line do
+      @doc unquote(docs)
       def unquote(function_name)(values, opts \\ []) do
         unquote(body)
       end
     end
   end
 
-  def generate_proxy({:query, module, proxy_opts}) do
+  def generate_proxy({:query, module, proxy_opts, {file, line}}) do
+    docs = get_docs(module)
+
     {function_name, proxy_opts} = function_name(module, proxy_opts)
     query_function_name = String.to_atom("#{function_name}_query")
 
-    quote do
+    quote file: file, line: line do
+      @doc unquote(docs)
       def unquote(function_name)(values \\ [], opts \\ []) do
         opts = Keyword.merge(unquote(proxy_opts), opts)
         Message.dispatch(unquote(module), values, opts)
       end
 
+      @doc "Same as `#{unquote(function_name)}` but returns the query without executing it"
       def unquote(query_function_name)(values, opts \\ []) do
         opts =
           unquote(proxy_opts)
           |> Keyword.merge(opts)
-          |> Keyword.put(:execute, false)
+          |> Keyword.put(:return, :query)
 
         Message.dispatch(unquote(module), values, opts)
       end
+    end
+  end
+
+  defp get_docs(module) do
+    case Code.fetch_docs(module) do
+      {:docs_v1, _anno, _lang, _format, %{"en" => docs}, _meta, _inner_docs} -> docs
+      _ -> ""
     end
   end
 

@@ -18,13 +18,13 @@ defmodule Cqrs.BoundedContext do
 
   defmacro command(module, opts \\ []) do
     quote do
-      @proxies {:command, unquote(module), unquote(opts)}
+      @proxies {:command, unquote(module), unquote(opts), {__ENV__.file, __ENV__.line}}
     end
   end
 
   defmacro query(module, opts \\ []) do
     quote do
-      @proxies {:query, unquote(module), unquote(opts)}
+      @proxies {:query, unquote(module), unquote(opts), {__ENV__.file, __ENV__.line}}
     end
   end
 

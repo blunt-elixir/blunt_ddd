@@ -3,6 +3,7 @@ defmodule Cqrs.BoundedContextTest do
 
   alias Cqrs.{DispatchContext, Query}
   alias Support.BoundedContextTest.UsersContext
+  alias Support.BoundedContextTest.ReadModel.Person
 
   test "create_person functions are created" do
     assert [1, 2] == UsersContext.__info__(:functions) |> Keyword.get_values(:create_person)
@@ -27,13 +28,16 @@ defmodule Cqrs.BoundedContextTest do
   end
 
   test "get_person_query returns the ecto query without executing it" do
-    alias Support.BoundedContextTest.ReadModel.Person
-
     assert {:ok, query} = UsersContext.get_person_query(%{id: UUID.uuid4()})
     assert %Ecto.Query{from: %{source: {"people", Person}}} = query
+  end
 
-    assert {:ok, context} = UsersContext.get_person_query(%{id: UUID.uuid4()}, return: :context)
-    assert %Ecto.Query{from: %{source: {"people", Person}}} = Query.query(context)
+  test "passing other values to the return option have no effect on the return value" do
+    assert {:ok, query} = UsersContext.get_person_query(%{id: UUID.uuid4()}, return: :context)
+    assert %Ecto.Query{from: %{source: {"people", Person}}} = query
+
+    assert {:ok, query} = UsersContext.get_person_query(%{id: UUID.uuid4()}, return: :response)
+    assert %Ecto.Query{from: %{source: {"people", Person}}} = query
   end
 
   test "get_person returns the person" do
