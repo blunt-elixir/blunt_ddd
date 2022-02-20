@@ -21,6 +21,8 @@ defmodule Cqrs.AggregateRoot do
 
   defmacro __using__(_opts) do
     quote do
+      use Cqrs.Message.Compilation
+
       @primary_key_type false
       @require_all_fields? false
       @create_jason_encoders? false
