@@ -44,15 +44,11 @@ defmodule Cqrs.AggregateRoot do
   defmacro field(name, type, opts \\ []),
     do: Fields.record(name, type, opts)
 
-  defmacro __before_compile__(_env) do
-    quote do
-      require Schema
-      Schema.generate()
+  defmacro __before_compile__(env) do
+    schema = Schema.generate(env)
+    state_update = State.generate_update()
+    field_access_functions = State.generate_field_access_functions(env)
 
-      require State
-      State.generate_update()
-      access = Enum.map(@schema_fields, &State.generate_field_access/1)
-      Module.eval_quoted(__MODULE__, access)
-    end
+    [schema, state_update] ++ field_access_functions
   end
 end

@@ -4,7 +4,13 @@ defmodule Cqrs.AggregateRoot.State do
   alias Cqrs.Message.Changeset
   alias Cqrs.AggregateRoot.{Error, State}
 
-  def generate_field_access({name, _type, _config}) do
+  def generate_field_access_functions(%{module: module}) do
+    module
+    |> Module.get_attribute(:schema_fields)
+    |> Enum.map(&generate_field_access/1)
+  end
+
+  defp generate_field_access({name, _type, _config}) do
     getter = String.to_atom("get_#{name}")
     putter = String.to_atom("put_#{name}")
 
@@ -19,7 +25,7 @@ defmodule Cqrs.AggregateRoot.State do
     end
   end
 
-  defmacro generate_update do
+  def generate_update do
     quote do
       def update(%__MODULE__{} = state, values) do
         State.update(__MODULE__, state, values)
