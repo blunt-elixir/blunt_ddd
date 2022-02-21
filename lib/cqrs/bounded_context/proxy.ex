@@ -4,12 +4,12 @@ defmodule Cqrs.BoundedContext.Proxy do
   alias Cqrs.Message.{Input, Metadata}
   alias Cqrs.BoundedContext.{Error, Proxy}
 
-  def validate!({:command, command_module}, context_module) do
+  def validate!({:command, command_module, _function_name}, context_module) do
     error = "#{inspect(command_module)} in #{inspect(context_module)} is not a valid #{inspect(Cqrs.Command)}."
     do_validate!(command_module, :command, error)
   end
 
-  def validate!({:query, query_module}, context_module) do
+  def validate!({:query, query_module, _function_name}, context_module) do
     error = "#{inspect(query_module)} in #{inspect(context_module)} is not a valid #{inspect(Cqrs.Query)}."
     do_validate!(query_module, :query, error)
   end
@@ -27,12 +27,11 @@ defmodule Cqrs.BoundedContext.Proxy do
   end
 
   def generate({:command, command_module, proxy_opts}) do
-    docs = Metadata.docs(command_module)
-
+    moduledoc = docs(command_module)
     {function_name, proxy_opts} = function_name(command_module, proxy_opts)
 
     quote do
-      @doc unquote(docs)
+      @doc unquote(moduledoc)
       def unquote(function_name)(values, opts \\ []) do
         Proxy.dispatch(unquote(command_module), values, unquote(proxy_opts), opts)
       end
@@ -40,13 +39,12 @@ defmodule Cqrs.BoundedContext.Proxy do
   end
 
   def generate({:query, query_module, proxy_opts}) do
-    docs = Metadata.docs(query_module)
-
+    moduledoc = docs(query_module)
     {function_name, proxy_opts} = function_name(query_module, proxy_opts)
     query_function_name = String.to_atom("#{function_name}_query")
 
     quote do
-      @doc unquote(docs)
+      @doc unquote(moduledoc)
       def unquote(function_name)(values \\ [], opts \\ []) do
         Proxy.dispatch(unquote(query_module), values, unquote(proxy_opts), opts)
       end
@@ -58,7 +56,17 @@ defmodule Cqrs.BoundedContext.Proxy do
     end
   end
 
-  defp function_name(message_module, opts) do
+  def docs(module) do
+    if function_exported?(module, :__doc__, 1) do
+      shortdoc = module.__doc__(:short)
+      fielddoc = module.__doc__(:field)
+      optiondoc = module.__doc__(:option)
+
+      shortdoc <> fielddoc <> optiondoc
+    end
+  end
+
+  def function_name(message_module, opts) do
     {as, opts} = Keyword.pop(opts, :as)
 
     name =

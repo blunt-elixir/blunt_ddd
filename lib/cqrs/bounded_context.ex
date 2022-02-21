@@ -20,23 +20,27 @@ defmodule Cqrs.BoundedContext do
     end
   end
 
-  defmacro command(module, opts \\ []) do
-    quote do
-      @messages {:command, unquote(module)}
-      @proxies {{:command, unquote(module), unquote(opts)}, {__ENV__.file, __ENV__.line}}
+  defmacro command(message_module, opts \\ []) do
+    quote bind_quoted: [message_module: message_module, opts: opts] do
+      {function_name, _opts} = Proxy.function_name(message_module, opts)
+
+      @messages {:command, message_module, function_name}
+      @proxies {{:command, message_module, opts}, {__ENV__.file, __ENV__.line}}
     end
   end
 
-  defmacro query(module, opts \\ []) do
-    quote do
-      @messages {:query, unquote(module)}
-      @proxies {{:query, unquote(module), unquote(opts)}, {__ENV__.file, __ENV__.line}}
+  defmacro query(message_module, opts \\ []) do
+    quote bind_quoted: [message_module: message_module, opts: opts] do
+      {function_name, _opts} = Proxy.function_name(message_module, opts)
+
+      @messages {:query, message_module, function_name}
+      @proxies {{:query, message_module, opts}, {__ENV__.file, __ENV__.line}}
     end
   end
 
   defmacro __before_compile__(_env) do
     quote do
-      Enum.map(@proxies, fn {message_info, {file, line}} ->
+      Enum.map(@proxies, fn {{_type, message_module, _opts} = message_info, {file, line}} ->
         code = Proxy.generate(message_info)
 
         __ENV__
@@ -49,13 +53,13 @@ defmodule Cqrs.BoundedContext do
 
   defmacro __after_compile__(%{module: module}, _bytecode) do
     module
-    |> BoundedContext.messages_proxying()
+    |> BoundedContext.proxied_messages()
     |> Enum.each(&Proxy.validate!(&1, module))
 
     nil
   end
 
-  def messages_proxying(bounded_context_module) do
+  def proxied_messages(bounded_context_module) do
     :attributes
     |> bounded_context_module.__info__()
     |> Keyword.get_values(:messages)
