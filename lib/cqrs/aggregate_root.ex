@@ -6,9 +6,6 @@ defmodule Cqrs.AggregateRoot do
   @type command :: struct()
   @type domain_event :: struct()
 
-  @callback execute(state, command) ::
-              {:ok, domain_event | list(domain_event)} | {:error, any()} | nil
-
   @callback apply(state, domain_event) :: state
 
   defmodule Error do
@@ -33,10 +30,6 @@ defmodule Cqrs.AggregateRoot do
       @before_compile Cqrs.AggregateRoot
 
       import Cqrs.AggregateRoot, only: :macros
-
-      @impl true
-      def execute(_state, _command), do: nil
-      defoverridable execute: 2
     end
   end
 
