@@ -40,7 +40,7 @@ defmodule Cqrs.BoundedContext do
 
   defmacro __before_compile__(_env) do
     quote do
-      Enum.map(@proxies, fn {{_type, message_module, _opts} = message_info, {file, line}} ->
+      Enum.map(@proxies, fn {message_info, {file, line}} ->
         code = Proxy.generate(message_info)
 
         __ENV__
