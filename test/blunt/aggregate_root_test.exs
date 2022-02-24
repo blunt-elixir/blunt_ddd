@@ -1,4 +1,4 @@
-defmodule Cqrs.AggregateRootTest do
+defmodule Blunt.AggregateRootTest do
   use ExUnit.Case, async: true
 
   alias Support.AggregateRootTest.{PersonAggregateRoot, ReservationEntity}

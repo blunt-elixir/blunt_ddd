@@ -1,5 +1,5 @@
 defmodule Support.Testing.PersonAggregate do
-  use Cqrs.Ddd
+  use Blunt.Ddd
 
   alias Support.Testing.{CreatePerson, PersonCreated}
   alias Support.Testing.{AddReservation, ReservationAdded, ReservationEntity}

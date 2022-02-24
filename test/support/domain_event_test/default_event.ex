@@ -1,4 +1,4 @@
 defmodule Support.DomainEventTest.DefaultEvent do
-  use Cqrs.DomainEvent
+  use Blunt.DomainEvent
   field(:user, :string)
 end

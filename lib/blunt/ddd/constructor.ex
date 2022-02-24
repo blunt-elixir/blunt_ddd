@@ -1,7 +1,7 @@
-defmodule Cqrs.Ddd.Constructor do
+defmodule Blunt.Ddd.Constructor do
   @moduledoc false
 
-  alias Cqrs.Message.Input
+  alias Blunt.Message.Input
 
   def put_option(opts),
     do: Keyword.put(opts, :constructor, :__new__)
@@ -14,7 +14,7 @@ defmodule Cqrs.Ddd.Constructor do
 
       @spec new(values(), overrides()) :: struct() | {:error, any()}
       def new(values, overrides \\ []),
-        do: Cqrs.Ddd.Constructor.new(__MODULE__, values, overrides, return_type: unquote(return_type))
+        do: Blunt.Ddd.Constructor.new(__MODULE__, values, overrides, return_type: unquote(return_type))
     end
   end
 

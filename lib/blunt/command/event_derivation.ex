@@ -1,14 +1,14 @@
-defmodule Cqrs.Command.EventDerivation do
-  alias Cqrs.Command.Events
+defmodule Blunt.Command.EventDerivation do
+  alias Blunt.Command.Events
 
   defmacro __using__(_opts) do
     quote do
       Module.register_attribute(__MODULE__, :events, accumulate: true)
 
-      import Cqrs.Command.EventDerivation, only: :macros
+      import Blunt.Command.EventDerivation, only: :macros
 
-      @before_compile Cqrs.Command.EventDerivation
-      @after_compile Cqrs.Command.EventDerivation
+      @before_compile Blunt.Command.EventDerivation
+      @after_compile Blunt.Command.EventDerivation
     end
   end
 

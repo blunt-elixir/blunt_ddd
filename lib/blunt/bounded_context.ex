@@ -1,6 +1,6 @@
-defmodule Cqrs.BoundedContext do
-  alias Cqrs.BoundedContext
-  alias Cqrs.BoundedContext.Proxy
+defmodule Blunt.BoundedContext do
+  alias Blunt.BoundedContext
+  alias Blunt.BoundedContext.Proxy
 
   defmodule Error do
     defexception [:message]
@@ -8,15 +8,15 @@ defmodule Cqrs.BoundedContext do
 
   defmacro __using__(_opts) do
     quote do
-      use Cqrs.Message.Compilation
+      use Blunt.Message.Compilation
 
       Module.register_attribute(__MODULE__, :proxies, accumulate: true)
       Module.register_attribute(__MODULE__, :messages, accumulate: true, persist: true)
 
-      @before_compile Cqrs.BoundedContext
-      @after_compile Cqrs.BoundedContext
+      @before_compile Blunt.BoundedContext
+      @after_compile Blunt.BoundedContext
 
-      import Cqrs.BoundedContext, only: :macros
+      import Blunt.BoundedContext, only: :macros
     end
   end
 

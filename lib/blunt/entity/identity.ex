@@ -1,10 +1,10 @@
-defmodule Cqrs.Entity.Identity do
+defmodule Blunt.Entity.Identity do
   @moduledoc false
 
   @default {:id, Ecto.UUID, autogenerate: false}
 
-  alias Cqrs.Message.Metadata
-  alias Cqrs.{Behaviour, Entity.Error, Entity.Identity}
+  alias Blunt.Message.Metadata
+  alias Blunt.{Behaviour, Entity.Error, Entity.Identity}
 
   def pop(opts) do
     opts
@@ -34,7 +34,7 @@ defmodule Cqrs.Entity.Identity do
   end
 
   def identity(entity_module, entity) do
-    Behaviour.validate!(entity_module, Cqrs.Entity)
+    Behaviour.validate!(entity_module, Blunt.Entity)
     {field_name, _type, _config} = Metadata.primary_key(entity_module)
     Map.fetch!(entity, field_name)
   end

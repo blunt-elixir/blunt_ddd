@@ -1,14 +1,14 @@
 defmodule CommandToTestDerivation do
-  use Cqrs.Command
+  use Blunt.Command
 
   field :id, :binary_id
   field :name, :string
 end
 
 defmodule Support.DomainEventTest.EventDerivedFromCommand do
-  use Cqrs.DomainEvent, derive_from: CommandToTestDerivation
+  use Blunt.DomainEvent, derive_from: CommandToTestDerivation
 end
 
 defmodule Support.DomainEventTest.EventDerivedFromCommandWithDrop do
-  use Cqrs.DomainEvent, derive_from: CommandToTestDerivation, drop: :name
+  use Blunt.DomainEvent, derive_from: CommandToTestDerivation, drop: :name
 end

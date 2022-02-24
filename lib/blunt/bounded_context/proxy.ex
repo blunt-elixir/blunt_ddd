@@ -1,16 +1,16 @@
-defmodule Cqrs.BoundedContext.Proxy do
+defmodule Blunt.BoundedContext.Proxy do
   @moduledoc false
 
-  alias Cqrs.Message.{Input, Metadata}
-  alias Cqrs.BoundedContext.{Error, Proxy}
+  alias Blunt.Message.{Input, Metadata}
+  alias Blunt.BoundedContext.{Error, Proxy}
 
   def validate!({:command, command_module, _function_name}, context_module) do
-    error = "#{inspect(command_module)} in #{inspect(context_module)} is not a valid #{inspect(Cqrs.Command)}."
+    error = "#{inspect(command_module)} in #{inspect(context_module)} is not a valid #{inspect(Blunt.Command)}."
     do_validate!(command_module, :command, error)
   end
 
   def validate!({:query, query_module, _function_name}, context_module) do
-    error = "#{inspect(query_module)} in #{inspect(context_module)} is not a valid #{inspect(Cqrs.Query)}."
+    error = "#{inspect(query_module)} in #{inspect(context_module)} is not a valid #{inspect(Blunt.Query)}."
     do_validate!(query_module, :query, error)
   end
 

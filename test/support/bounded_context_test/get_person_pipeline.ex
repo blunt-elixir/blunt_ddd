@@ -1,7 +1,7 @@
 defmodule Support.BoundedContextTest.GetPersonPipeline do
-  use Cqrs.QueryPipeline
+  use Blunt.QueryPipeline
 
-  alias Cqrs.Repo
+  alias Blunt.Repo
   alias Support.BoundedContextTest.ReadModel.Person
 
   @impl true

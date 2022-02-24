@@ -1,5 +1,5 @@
 defmodule Support.DomainEventTest.EventWithDecimalVersion do
-  use Cqrs.DomainEvent
+  use Blunt.DomainEvent
 
   @version 2.3
 

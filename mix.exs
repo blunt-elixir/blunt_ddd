@@ -3,17 +3,17 @@ defmodule CqrsToolsDdd.MixProject do
 
   def project do
     [
-      app: :cqrs_tools_ddd,
+      app: :blunt_ddd,
       version: "0.1.0",
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: [
-        description: "DDD semantics for cqrs_tools",
+        description: "DDD semantics for blunt",
         licenses: ["MIT"],
-        links: %{"GitHub" => "https://github.com/elixir-cqrs/cqrs_tools_ddd"}
+        links: %{"GitHub" => "https://github.com/blunt-elixir/blunt_ddd"}
       ],
-      source_url: "https://github.com/elixir-cqrs/cqrs_tools_ddd",
+      source_url: "https://github.com/blunt-elixir/blunt_ddd",
       elixirc_paths: elixirc_paths(Mix.env())
     ]
   end
@@ -31,8 +31,8 @@ defmodule CqrsToolsDdd.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      # {:cqrs_tools, path: "../cqrs_tools", override: true},
-      {:cqrs_tools, github: "elixir-cqrs/cqrs_tools"},
+      {:blunt, path: "../blunt", override: true},
+      # {:blunt, github: "blunt-elixir/blunt"},
       {:etso, "~> 0.1.6", only: [:test]},
       {:faker, "~> 0.17.0", optional: true},
       {:ex_machina, "~> 2.7", optional: true},

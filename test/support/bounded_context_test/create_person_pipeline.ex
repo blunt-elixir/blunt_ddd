@@ -1,7 +1,7 @@
 defmodule Support.BoundedContextTest.CreatePersonPipeline do
-  use Cqrs.CommandPipeline
+  use Blunt.CommandPipeline
 
-  alias Cqrs.Repo
+  alias Blunt.Repo
   alias Support.BoundedContextTest.ReadModel.Person
 
   @impl true

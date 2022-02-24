@@ -1,6 +1,6 @@
 defmodule Support.Command.EventDerivationTest.CommandWithEventDerivations do
-  use Cqrs.Command
-  use Cqrs.Command.EventDerivation
+  use Blunt.Command
+  use Blunt.Command.EventDerivation
 
   field :name, :string, required: true
   field :dog, :string, default: "maize"
@@ -17,7 +17,7 @@ defmodule Support.Command.EventDerivationTest.CommandWithEventDerivations do
     field :date, :date
   end
 
-  @event_ns Cqrs.CommandTest.Events
+  @event_ns Blunt.CommandTest.Events
 
   derive_event NamespacedEventWithExtrasAndDrops, drop: [:dog], ns: @event_ns do
     field :date, :date

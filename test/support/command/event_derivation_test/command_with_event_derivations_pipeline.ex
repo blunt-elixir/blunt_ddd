@@ -1,7 +1,7 @@
 defmodule Support.Command.EventDerivationTest.CommandWithEventDerivationsPipeline do
-  use Cqrs.CommandPipeline
+  use Blunt.CommandPipeline
 
-  alias Cqrs.CommandTest.Events.NamespacedEventWithExtrasAndDrops
+  alias Blunt.CommandTest.Events.NamespacedEventWithExtrasAndDrops
 
   alias Support.Command.EventDerivationTest.{
     DefaultEvent,

@@ -1,5 +1,5 @@
 defmodule Support.BoundedContextTest.UsersContext do
-  use Cqrs.BoundedContext
+  use Blunt.BoundedContext
   alias Support.BoundedContextTest.{CreatePerson, GetPerson}
 
   command CreatePerson

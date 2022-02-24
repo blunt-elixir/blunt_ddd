@@ -1,8 +1,8 @@
-defmodule Cqrs.EntityTest do
+defmodule Blunt.EntityTest do
   use ExUnit.Case, async: true
 
-  alias Cqrs.Message.Metadata
-  alias Cqrs.EntityTestMessages.Protocol.{Entity1, Entity2}
+  alias Blunt.Message.Metadata
+  alias Blunt.EntityTestMessages.Protocol.{Entity1, Entity2}
 
   test "entity has id field by default" do
     fields = Entity1.__schema__(:fields)
@@ -38,9 +38,9 @@ defmodule Cqrs.EntityTest do
       two = Entity2.new(ident: UUID.uuid4())
 
       error =
-        "Cqrs.EntityTestMessages.Protocol.Entity1.equals? requires two Cqrs.EntityTestMessages.Protocol.Entity1 structs"
+        "Blunt.EntityTestMessages.Protocol.Entity1.equals? requires two Blunt.EntityTestMessages.Protocol.Entity1 structs"
 
-      assert_raise Cqrs.Entity.Error, error, fn ->
+      assert_raise Blunt.Entity.Error, error, fn ->
         Entity1.equals?(one, two)
       end
     end
@@ -67,11 +67,11 @@ defmodule Cqrs.EntityTest do
     test "unable to set to false" do
       code = """
       defmodule E do
-        use Cqrs.Entity, identity: false
+        use Blunt.Entity, identity: false
       end
       """
 
-      assert_raise Cqrs.Entity.Error, "Entities require a primary key", fn ->
+      assert_raise Blunt.Entity.Error, "Entities require a primary key", fn ->
         Code.compile_string(code)
       end
     end
@@ -79,11 +79,11 @@ defmodule Cqrs.EntityTest do
     test "unable to set to nil" do
       code = """
       defmodule E do
-        use Cqrs.Entity, identity: nil
+        use Blunt.Entity, identity: nil
       end
       """
 
-      assert_raise Cqrs.Entity.Error, "Entities require a primary key", fn ->
+      assert_raise Blunt.Entity.Error, "Entities require a primary key", fn ->
         Code.compile_string(code)
       end
     end
@@ -91,11 +91,11 @@ defmodule Cqrs.EntityTest do
     test "must be tuple" do
       code = """
       defmodule E do
-        use Cqrs.Entity, identity: :abc
+        use Blunt.Entity, identity: :abc
       end
       """
 
-      assert_raise Cqrs.Entity.Error,
+      assert_raise Blunt.Entity.Error,
                    "identity must be either {name, type} or {name, type, options}",
                    fn ->
                      Code.compile_string(code)

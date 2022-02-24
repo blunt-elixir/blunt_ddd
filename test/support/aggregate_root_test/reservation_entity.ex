@@ -1,3 +1,3 @@
 defmodule Support.AggregateRootTest.ReservationEntity do
-  use Cqrs.Entity
+  use Blunt.Entity
 end

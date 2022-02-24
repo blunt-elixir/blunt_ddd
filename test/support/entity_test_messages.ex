@@ -1,9 +1,9 @@
-defmodule Cqrs.EntityTestMessages.Protocol do
+defmodule Blunt.EntityTestMessages.Protocol do
   defmodule Entity1 do
-    use Cqrs.Entity
+    use Blunt.Entity
   end
 
   defmodule Entity2 do
-    use Cqrs.Entity, identity: {:ident, :binary_id, []}
+    use Blunt.Entity, identity: {:ident, :binary_id, []}
   end
 end

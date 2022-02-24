@@ -1,7 +1,7 @@
-defmodule Cqrs.Command.EventDerivationTest do
+defmodule Blunt.Command.EventDerivationTest do
   use ExUnit.Case, async: true
 
-  alias Cqrs.CommandTest.Events.NamespacedEventWithExtrasAndDrops
+  alias Blunt.CommandTest.Events.NamespacedEventWithExtrasAndDrops
 
   alias Support.Command.EventDerivationTest.{
     CommandWithEventDerivations,
@@ -53,8 +53,8 @@ defmodule Cqrs.Command.EventDerivationTest do
   end
 
   defmodule ComandWithFQEvent do
-    use Cqrs.Command
-    use Cqrs.Command.EventDerivation
+    use Blunt.Command
+    use Blunt.Command.EventDerivation
 
     derive_event My.Namespace.ThingHappened
   end

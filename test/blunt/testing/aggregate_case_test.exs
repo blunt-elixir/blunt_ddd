@@ -1,11 +1,11 @@
 if Code.ensure_loaded?(ExMachina) and Code.ensure_loaded?(Faker) do
-  defmodule Cqrs.Testing.AggregateCaseTest do
+  defmodule Blunt.Testing.AggregateCaseTest do
     use ExUnit.Case
-    use Cqrs.Testing.ExMachina
+    use Blunt.Testing.ExMachina
 
     alias Support.Testing.{CreatePerson, PersonAggregate, PersonCreated}
 
-    use Cqrs.Testing.AggregateCase, aggregate: PersonAggregate
+    use Blunt.Testing.AggregateCase, aggregate: PersonAggregate
 
     factory CreatePerson
     factory PersonCreated

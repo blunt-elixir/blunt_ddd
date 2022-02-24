@@ -1,5 +1,5 @@
 defmodule Support.AggregateRootTest.PersonAggregateRoot do
-  use Cqrs.Ddd
+  use Blunt.Ddd
   alias Support.AggregateRootTest.ReservationEntity
   alias Support.AggregateRootTest.Protocol.{PersonCreated, ReservationAdded}
 

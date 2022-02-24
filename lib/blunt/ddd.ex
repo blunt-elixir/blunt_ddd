@@ -1,41 +1,41 @@
-defmodule Cqrs.Ddd do
+defmodule Blunt.Ddd do
   defmacro __using__(_opts) do
     quote do
-      import Cqrs.Ddd, only: :macros
+      import Blunt.Ddd, only: :macros
     end
   end
 
   defmacro aggregate_state(do: body) do
     quote do
-      use Cqrs.AggregateRoot
+      use Blunt.AggregateRoot
       unquote(body)
     end
   end
 
   defmacro defcontext(do: body) do
     quote do
-      use Cqrs.BoundedContext
+      use Blunt.BoundedContext
       unquote(body)
     end
   end
 
   defmacro defevent(opts \\ [], do: body) do
     quote do
-      use Cqrs.DomainEvent, unquote(opts)
+      use Blunt.DomainEvent, unquote(opts)
       unquote(body)
     end
   end
 
   defmacro defvalue(opts \\ [], do: body) do
     quote do
-      use Cqrs.ValueObject, unquote(opts)
+      use Blunt.ValueObject, unquote(opts)
       unquote(body)
     end
   end
 
   defmacro defentity(opts \\ [], do: body) do
     quote do
-      use Cqrs.Entity, unquote(opts)
+      use Blunt.Entity, unquote(opts)
       unquote(body)
     end
   end

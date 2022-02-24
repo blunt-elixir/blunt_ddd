@@ -1,5 +1,5 @@
 defmodule Support.BoundedContextTest.GetPerson do
-  use Cqrs.Query
+  use Blunt.Query
 
   field :id, :binary_id, required: true
 

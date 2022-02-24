@@ -1,8 +1,8 @@
-defmodule Cqrs.Command.Events do
+defmodule Blunt.Command.Events do
   @moduledoc false
 
-  alias Cqrs.Command.Events
-  alias Cqrs.Message.Metadata
+  alias Blunt.Command.Events
+  alias Blunt.Message.Metadata
 
   def record(name, opts) do
     quote do
@@ -57,9 +57,11 @@ defmodule Cqrs.Command.Events do
         {name, type, opts} -> quote do: field(unquote(name), unquote(type), unquote(opts))
       end)
 
+    module_name = fq_event_name(command, event)
+
     domain_event =
       quote do
-        use Cqrs.DomainEvent
+        use Blunt.DomainEvent
         unquote_splicing(schema_fields)
         Module.eval_quoted(__MODULE__, unquote(event_body))
       end
@@ -69,9 +71,7 @@ defmodule Cqrs.Command.Events do
       |> Map.put(:file, file)
       |> Map.put(:line, line)
 
-    command
-    |> fq_event_name(event)
-    |> Module.create(domain_event, env)
+    Module.create(module_name, domain_event, env)
   end
 
   def fq_event_name(command, {event_name, event_opts, _location}),

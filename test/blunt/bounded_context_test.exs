@@ -1,7 +1,7 @@
-defmodule Cqrs.BoundedContextTest do
+defmodule Blunt.BoundedContextTest do
   use ExUnit.Case, async: true
 
-  alias Cqrs.{DispatchContext, Query}
+  alias Blunt.{DispatchContext, Query}
   alias Support.BoundedContextTest.UsersContext
   alias Support.BoundedContextTest.ReadModel.Person
 

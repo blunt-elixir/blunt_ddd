@@ -1,6 +1,6 @@
-defmodule Cqrs.AggregateRoot do
-  alias Cqrs.AggregateRoot.State
-  alias Cqrs.Message.{Schema, Schema.Fields}
+defmodule Blunt.AggregateRoot do
+  alias Blunt.AggregateRoot.State
+  alias Blunt.Message.{Schema, Schema.Fields}
 
   @type state :: struct()
   @type command :: struct()
@@ -18,7 +18,7 @@ defmodule Cqrs.AggregateRoot do
 
   defmacro __using__(_opts) do
     quote do
-      use Cqrs.Message.Compilation
+      use Blunt.Message.Compilation
 
       @primary_key_type false
       @require_all_fields? false
@@ -26,10 +26,10 @@ defmodule Cqrs.AggregateRoot do
 
       Module.register_attribute(__MODULE__, :schema_fields, accumulate: true)
 
-      @behaviour Cqrs.AggregateRoot
-      @before_compile Cqrs.AggregateRoot
+      @behaviour Blunt.AggregateRoot
+      @before_compile Blunt.AggregateRoot
 
-      import Cqrs.AggregateRoot, only: :macros
+      import Blunt.AggregateRoot, only: :macros
     end
   end
 

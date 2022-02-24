@@ -1,5 +1,5 @@
 defmodule Support.BoundedContextTest.CreatePerson do
-  use Cqrs.Command
+  use Blunt.Command
 
   field :name, :string
 

@@ -1,8 +1,8 @@
-defmodule Cqrs.AggregateRoot.State do
+defmodule Blunt.AggregateRoot.State do
   @moduledoc false
 
-  alias Cqrs.Message.Changeset
-  alias Cqrs.AggregateRoot.{Error, State}
+  alias Blunt.Message.Changeset
+  alias Blunt.AggregateRoot.{Error, State}
 
   def generate_field_access_functions(%{module: module}) do
     module
@@ -34,7 +34,7 @@ defmodule Cqrs.AggregateRoot.State do
   end
 
   def update(state_module, state, values) do
-    attrs = Cqrs.Message.Input.normalize(values, state_module)
+    attrs = Blunt.Message.Input.normalize(values, state_module)
 
     types =
       :fields

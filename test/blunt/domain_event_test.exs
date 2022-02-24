@@ -1,7 +1,7 @@
-defmodule Cqrs.DomainEventTest do
+defmodule Blunt.DomainEventTest do
   use ExUnit.Case, async: true
 
-  alias Cqrs.Message.Metadata
+  alias Blunt.Message.Metadata
 
   alias Support.DomainEventTest.{
     DefaultEvent,

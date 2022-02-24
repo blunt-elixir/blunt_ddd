@@ -1,3 +1,3 @@
 defmodule Support.Testing.ReservationEntity do
-  use Cqrs.Entity
+  use Blunt.Entity
 end

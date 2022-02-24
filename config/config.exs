@@ -1,3 +1,3 @@
 import Config
 
-config :cqrs_tools, create_jason_encoders: false
+config :blunt, create_jason_encoders: false

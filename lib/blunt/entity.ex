@@ -1,6 +1,6 @@
-defmodule Cqrs.Entity do
-  alias Cqrs.Ddd.Constructor
-  alias Cqrs.Entity.Identity
+defmodule Blunt.Entity do
+  alias Blunt.Ddd.Constructor
+  alias Blunt.Entity.Identity
 
   @callback identity(struct()) :: any()
 
@@ -12,7 +12,7 @@ defmodule Cqrs.Entity do
     quote do
       {identity, opts} = Identity.pop(unquote(opts))
 
-      use Cqrs.Message,
+      use Blunt.Message,
           [require_all_fields?: false]
           |> Keyword.merge(unquote(opts))
           |> Constructor.put_option()
@@ -20,8 +20,8 @@ defmodule Cqrs.Entity do
           |> Keyword.put(:message_type, :entity)
           |> Keyword.put(:primary_key, identity)
 
-      @behaviour Cqrs.Entity
-      @before_compile Cqrs.Entity
+      @behaviour Blunt.Entity
+      @before_compile Blunt.Entity
     end
   end
 

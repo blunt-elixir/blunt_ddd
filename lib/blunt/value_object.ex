@@ -1,16 +1,16 @@
-defmodule Cqrs.ValueObject do
-  alias Cqrs.Ddd.Constructor
+defmodule Blunt.ValueObject do
+  alias Blunt.Ddd.Constructor
 
   defmacro __using__(opts) do
     quote do
-      use Cqrs.Message,
+      use Blunt.Message,
           [require_all_fields?: false]
           |> Keyword.merge(unquote(opts))
           |> Constructor.put_option()
           |> Keyword.put(:dispatch?, false)
           |> Keyword.put(:message_type, :value_object)
 
-      @before_compile Cqrs.ValueObject
+      @before_compile Blunt.ValueObject
     end
   end
 

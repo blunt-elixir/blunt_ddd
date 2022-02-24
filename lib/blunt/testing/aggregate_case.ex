@@ -1,12 +1,12 @@
-defmodule Cqrs.Testing.AggregateCase do
+defmodule Blunt.Testing.AggregateCase do
   use ExUnit.CaseTemplate
 
-  alias Cqrs.Testing.AggregateCase
-  alias Cqrs.{AggregateRoot, Behaviour}
+  alias Blunt.Testing.AggregateCase
+  alias Blunt.{AggregateRoot, Behaviour}
 
   using aggregate: aggregate do
     quote do
-      import Cqrs.Testing.AggregateCase, only: :macros
+      import Blunt.Testing.AggregateCase, only: :macros
       @aggregate Behaviour.validate!(unquote(aggregate), AggregateRoot)
     end
   end
