@@ -35,7 +35,7 @@ defmodule CqrsToolsDdd.MixProject do
   defp deps do
     [
       # {:blunt, path: "../blunt", override: true},
-      {:blunt, github: "blunt-elixir/blunt"},
+      {:blunt, "~> 0.1"},
 
       # For testing
       {:etso, "~> 0.1.6", only: [:test]},
