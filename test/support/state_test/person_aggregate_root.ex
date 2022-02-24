@@ -1,9 +1,12 @@
-defmodule Support.AggregateRootTest.PersonAggregateRoot do
-  use Blunt.Ddd
-  alias Support.AggregateRootTest.ReservationEntity
-  alias Support.AggregateRootTest.Protocol.{PersonCreated, ReservationAdded}
+defmodule Support.StateTest.PersonAggregateRoot do
+  @behaviour Blunt.AggregateRoot
 
-  aggregate_state do
+  use Blunt.Ddd
+
+  alias Support.StateTest.ReservationEntity
+  alias Support.StateTest.Protocol.{PersonCreated, ReservationAdded}
+
+  defstate do
     field :id, :binary_id
     field :reservations, {:array, ReservationEntity}, default: []
   end

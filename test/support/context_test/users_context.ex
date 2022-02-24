@@ -1,6 +1,6 @@
-defmodule Support.BoundedContextTest.UsersContext do
-  use Blunt.BoundedContext
-  alias Support.BoundedContextTest.{CreatePerson, GetPerson}
+defmodule Support.ContextTest.UsersContext do
+  use Blunt.Context
+  alias Support.ContextTest.{CreatePerson, GetPerson}
 
   command CreatePerson
   command CreatePerson, as: :create_person2

@@ -1,4 +1,4 @@
-defmodule Support.BoundedContextTest.CreatePerson do
+defmodule Support.ContextTest.CreatePerson do
   use Blunt.Command
 
   field :name, :string

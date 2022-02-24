@@ -5,16 +5,16 @@ defmodule Blunt.Ddd do
     end
   end
 
-  defmacro aggregate_state(do: body) do
+  defmacro defstate(do: body) do
     quote do
-      use Blunt.AggregateRoot
+      use Blunt.State
       unquote(body)
     end
   end
 
   defmacro defcontext(do: body) do
     quote do
-      use Blunt.BoundedContext
+      use Blunt.Context
       unquote(body)
     end
   end

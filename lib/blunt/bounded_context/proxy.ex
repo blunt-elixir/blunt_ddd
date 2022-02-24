@@ -1,8 +1,8 @@
-defmodule Blunt.BoundedContext.Proxy do
+defmodule Blunt.Context.Proxy do
   @moduledoc false
 
   alias Blunt.Message.{Input, Metadata}
-  alias Blunt.BoundedContext.{Error, Proxy}
+  alias Blunt.Context.{Error, Proxy}
 
   def validate!({:command, command_module, _function_name}, context_module) do
     error = "#{inspect(command_module)} in #{inspect(context_module)} is not a valid #{inspect(Blunt.Command)}."

@@ -1,8 +1,8 @@
-defmodule Blunt.AggregateRootTest do
+defmodule Blunt.StateTest do
   use ExUnit.Case, async: true
 
-  alias Support.AggregateRootTest.{PersonAggregateRoot, ReservationEntity}
-  alias Support.AggregateRootTest.Protocol.{PersonCreated, ReservationAdded}
+  alias Support.StateTest.{PersonAggregateRoot, ReservationEntity}
+  alias Support.StateTest.Protocol.{PersonCreated, ReservationAdded}
 
   test "initial aggregate state" do
     assert %{id: nil} = %PersonAggregateRoot{}

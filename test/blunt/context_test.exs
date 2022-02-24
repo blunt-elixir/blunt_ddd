@@ -1,9 +1,9 @@
-defmodule Blunt.BoundedContextTest do
+defmodule Blunt.ContextTest do
   use ExUnit.Case, async: true
 
   alias Blunt.{DispatchContext, Query}
-  alias Support.BoundedContextTest.UsersContext
-  alias Support.BoundedContextTest.ReadModel.Person
+  alias Support.ContextTest.UsersContext
+  alias Support.ContextTest.ReadModel.Person
 
   test "create_person functions are created" do
     assert [1, 2] == UsersContext.__info__(:functions) |> Keyword.get_values(:create_person)
@@ -41,7 +41,7 @@ defmodule Blunt.BoundedContextTest do
   end
 
   test "get_person returns the person" do
-    alias Support.BoundedContextTest.ReadModel.Person
+    alias Support.ContextTest.ReadModel.Person
 
     assert {:ok, %{id: person_id}} = UsersContext.create_person(name: "chris")
 

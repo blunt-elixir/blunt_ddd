@@ -1,8 +1,8 @@
-defmodule Support.BoundedContextTest.CreatePersonPipeline do
+defmodule Support.ContextTest.CreatePersonPipeline do
   use Blunt.CommandPipeline
 
   alias Blunt.Repo
-  alias Support.BoundedContextTest.ReadModel.Person
+  alias Support.ContextTest.ReadModel.Person
 
   @impl true
   def handle_dispatch(%{id: id, name: name}, _context) do

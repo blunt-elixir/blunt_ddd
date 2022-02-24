@@ -1,8 +1,11 @@
 defmodule CqrsToolsDdd.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
+
   def project do
     [
+      version: @version,
       app: :blunt_ddd,
       version: "0.1.0",
       elixir: "~> 1.13",
@@ -33,11 +36,16 @@ defmodule CqrsToolsDdd.MixProject do
     [
       # {:blunt, path: "../blunt", override: true},
       {:blunt, github: "blunt-elixir/blunt"},
+
+      # For testing
       {:etso, "~> 0.1.6", only: [:test]},
-      {:faker, "~> 0.17.0", optional: true},
-      {:ex_machina, "~> 2.7", optional: true},
+      {:faker, "~> 0.17.0", optional: true, only: [:test]},
+      {:ex_machina, "~> 2.7", optional: true, only: [:test]},
       {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
-      {:elixir_uuid, "~> 1.6", override: true, hex: :uuid_utils, only: :test}
+      {:elixir_uuid, "~> 1.6", only: [:dev, :test], override: true, hex: :uuid_utils},
+
+      # generate docs
+      {:ex_doc, "~> 0.28", only: :dev, runtime: false}
     ]
   end
 end

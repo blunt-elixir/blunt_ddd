@@ -1,4 +1,4 @@
-defmodule Support.BoundedContextTest.ReadModel do
+defmodule Support.ContextTest.ReadModel do
   defmodule Person do
     use Ecto.Schema
 

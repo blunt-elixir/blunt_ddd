@@ -1,6 +1,6 @@
-defmodule Blunt.BoundedContext do
-  alias Blunt.BoundedContext
-  alias Blunt.BoundedContext.Proxy
+defmodule Blunt.Context do
+  alias Blunt.Context
+  alias Blunt.Context.Proxy
 
   defmodule Error do
     defexception [:message]
@@ -13,10 +13,10 @@ defmodule Blunt.BoundedContext do
       Module.register_attribute(__MODULE__, :proxies, accumulate: true)
       Module.register_attribute(__MODULE__, :messages, accumulate: true, persist: true)
 
-      @before_compile Blunt.BoundedContext
-      @after_compile Blunt.BoundedContext
+      @before_compile Blunt.Context
+      @after_compile Blunt.Context
 
-      import Blunt.BoundedContext, only: :macros
+      import Blunt.Context, only: :macros
     end
   end
 
@@ -53,12 +53,13 @@ defmodule Blunt.BoundedContext do
 
   defmacro __after_compile__(%{module: module}, _bytecode) do
     module
-    |> BoundedContext.proxied_messages()
+    |> Context.proxied_messages()
     |> Enum.each(&Proxy.validate!(&1, module))
 
     nil
   end
 
+  @doc false
   def proxied_messages(bounded_context_module) do
     :attributes
     |> bounded_context_module.__info__()

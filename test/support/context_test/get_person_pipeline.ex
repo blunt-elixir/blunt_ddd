@@ -1,8 +1,8 @@
-defmodule Support.BoundedContextTest.GetPersonPipeline do
+defmodule Support.ContextTest.GetPersonPipeline do
   use Blunt.QueryPipeline
 
   alias Blunt.Repo
-  alias Support.BoundedContextTest.ReadModel.Person
+  alias Support.ContextTest.ReadModel.Person
 
   @impl true
   def create_query(filters, _context) do
