@@ -31,8 +31,8 @@ defmodule CqrsToolsDdd.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:blunt, path: "../blunt", override: true},
-      # {:blunt, github: "blunt-elixir/blunt"},
+      # {:blunt, path: "../blunt", override: true},
+      {:blunt, github: "blunt-elixir/blunt"},
       {:etso, "~> 0.1.6", only: [:test]},
       {:faker, "~> 0.17.0", optional: true},
       {:ex_machina, "~> 2.7", optional: true},
